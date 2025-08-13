@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Test Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            height: 200px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .success {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            background: #e9ecef;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 AI Test Generator</h1>
+        <p>Genera automaticamente test JUnit da codice Java esistente</p>
+    </div>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('generate')">Genera Test</button>
+            <button class="tab" onclick="showTab('export')">Genera e Esporta</button>
+            <button class="tab" onclick="showTab('analyze')">Analizza Codice</button>
+        </div>
+        
+        <!-- Tab Genera Test -->
+        <div id="generate-tab" class="tab-content active">
+            <h2>Genera Test JUnit</h2>
+            <form id="generate-form">
+                <div class="form-group">
+                    <label for="sourceCode">Codice Sorgente Java:</label>
+                    <textarea id="sourceCode" placeholder="Incolla qui il tuo codice Java...">public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+    
+    public int divide(int a, int b) {
+        if (b == 0) {
+            throw new IllegalArgumentException("Cannot divide by zero");
+        }
+        return a / b;
+    }
+}</textarea>
+                </div>
+                
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="className">Nome Classe:</label>
+                        <input type="text" id="className" value="Calculator">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="packageName">Package:</label>
+                        <input type="text" id="packageName" value="com.example">
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="testType">Tipo di Test:</label>
+                        <select id="testType">
+                            <option value="UNIT_TEST">Unit Test</option>
+                            <option value="INTEGRATION_TEST">Integration Test</option>
+                            <option value="MOCK_TEST">Mock Test</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="coverageLevel">Livello di Copertura:</label>
+                        <select id="coverageLevel">
+                            <option value="BASIC">Basic</option>
+                            <option value="COMPREHENSIVE">Comprehensive</option>
+                            <option value="EDGE_CASES">Edge Cases</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="button" onclick="generateTests()">🚀 Genera Test</button>
+            </form>
+        </div>
+        
+        <!-- Tab Genera e Esporta -->
+        <div id="export-tab" class="tab-content">
+            <h2>Genera e Esporta Test</h2>
+            <form id="export-form">
+                <div class="form-group">
+                    <label for="exportSourceCode">Codice Sorgente Java:</label>
+                    <textarea id="exportSourceCode" placeholder="Incolla qui il tuo codice Java...">public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+    
+    public int divide(int a, int b) {
+        if (b == 0) {
+            throw new IllegalArgumentException("Cannot divide by zero");
+        }
+        return a / b;
+    }
+}</textarea>
+                </div>
+                
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="exportClassName">Nome Classe:</label>
+                        <input type="text" id="exportClassName" value="Calculator">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="exportPackageName">Package:</label>
+                        <input type="text" id="exportPackageName" value="com.example">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="projectPath">Path Progetto Java:</label>
+                    <input type="text" id="projectPath" value="/path/to/your/java/project" placeholder="Es: C:\Users\nome\projects\mio-progetto">
+                </div>
+                
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="exportTestType">Tipo di Test:</label>
+                        <select id="exportTestType">
+                            <option value="UNIT_TEST">Unit Test</option>
+                            <option value="INTEGRATION_TEST">Integration Test</option>
+                            <option value="MOCK_TEST">Mock Test</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="exportCoverageLevel">Livello di Copertura:</label>
+                        <select id="exportCoverageLevel">
+                            <option value="BASIC">Basic</option>
+                            <option value="COMPREHENSIVE">Comprehensive</option>
+                            <option value="EDGE_CASES">Edge Cases</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="button" onclick="generateAndExport()">📁 Genera e Esporta</button>
+            </form>
+        </div>
+        
+        <!-- Tab Analizza -->
+        <div id="analyze-tab" class="tab-content">
+            <h2>Analizza Codice</h2>
+            <form id="analyze-form">
+                <div class="form-group">
+                    <label for="analyzeSourceCode">Codice Sorgente Java:</label>
+                    <textarea id="analyzeSourceCode" placeholder="Incolla qui il tuo codice Java...">public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+    
+    public int divide(int a, int b) {
+        if (b == 0) {
+            throw new IllegalArgumentException("Cannot divide by zero");
+        }
+        return a / b;
+    }
+}</textarea>
+                </div>
+                
+                <button type="button" onclick="analyzeCode()">🔍 Analizza Codice</button>
+            </form>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            // Nascondi tutti i tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Rimuovi la classe active da tutti i tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostra il tab selezionato
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Attiva il tab button
+            event.target.classList.add('active');
+        }
+        
+        async function generateTests() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Generazione test in corso...</p>';
+            
+            const request = {
+                sourceCode: document.getElementById('sourceCode').value,
+                className: document.getElementById('className').value,
+                packageName: document.getElementById('packageName').value,
+                testType: document.getElementById('testType').value,
+                coverageLevel: document.getElementById('coverageLevel').value
+            };
+            
+            try {
+                const response = await fetch('/api/v1/test-generator/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(request)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>✅ Test generati con successo!</h3>
+                            <p><strong>Classe Test:</strong> ${data.testClassName}</p>
+                            <p><strong>Copertura Stimata:</strong> ${data.estimatedCoverage}%</p>
+                            <p><strong>Metodi di Test:</strong> ${data.testMethods.length}</p>
+                            <ul>${data.testMethods.map(method => '<li>' + method + '</li>').join('')}</ul>
+                            
+                            <h4>Codice Generato:</h4>
+                            <pre>${data.generatedTestCode}</pre>
+                            
+                            <h4>Suggerimenti:</h4>
+                            <ul>${data.suggestions.map(suggestion => '<li>' + suggestion + '</li>').join('')}</ul>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.message || 'Errore nella generazione');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Errore</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function generateAndExport() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Generazione e esportazione in corso...</p>';
+            
+            const request = {
+                sourceCode: document.getElementById('exportSourceCode').value,
+                className: document.getElementById('exportClassName').value,
+                packageName: document.getElementById('exportPackageName').value,
+                testType: document.getElementById('exportTestType').value,
+                coverageLevel: document.getElementById('exportCoverageLevel').value,
+                projectPath: document.getElementById('projectPath').value
+            };
+            
+            try {
+                const response = await fetch('/api/v1/test-generator/generate-and-export', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(request)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>✅ Test generati ed esportati con successo!</h3>
+                            <p><strong>File creato:</strong> <code>${data.filePath}</code></p>
+                            <p><strong>Tipo Progetto:</strong> ${data.projectType}</p>
+                            <p><strong>Classe Test:</strong> ${data.testClassName}</p>
+                            <p><strong>Copertura Stimata:</strong> ${data.estimatedCoverage}%</p>
+                            <p><strong>Metodi di Test:</strong> ${data.testMethods.length}</p>
+                            
+                            <h4>Suggerimenti:</h4>
+                            <ul>${data.suggestions.map(suggestion => '<li>' + suggestion + '</li>').join('')}</ul>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || 'Errore nella generazione');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Errore</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function analyzeCode() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Analisi del codice in corso...</p>';
+            
+            const request = {
+                sourceCode: document.getElementById('analyzeSourceCode').value
+            };
+            
+            try {
+                const response = await fetch('/api/v1/test-generator/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(request)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>🔍 Analisi completata</h3>
+                            <p><strong>Classe:</strong> ${data.className}</p>
+                            <p><strong>Package:</strong> ${data.packageName}</p>
+                            <p><strong>Tipo:</strong> ${data.classType}</p>
+                            <p><strong>Ha costruttori:</strong> ${data.hasConstructors ? 'Sì' : 'No'}</p>
+                            
+                            <h4>Metodi (${data.methods.length}):</h4>
+                            <ul>
+                                ${data.methods.map(method => `
+                                    <li>
+                                        <strong>${method.name}(${method.parameters.map(p => p.type + ' ' + p.name).join(', ')})</strong>: ${method.returnType}
+                                        ${method.isPublic ? ' [public]' : ''}
+                                        ${method.isStatic ? ' [static]' : ''}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                            
+                            <h4>Campi (${data.fields.length}):</h4>
+                            <ul>
+                                ${data.fields.map(field => `
+                                    <li>
+                                        <strong>${field.name}</strong>: ${field.type}
+                                        ${field.isPrivate ? ' [private]' : ''}
+                                        ${field.isStatic ? ' [static]' : ''}
+                                        ${field.isFinal ? ' [final]' : ''}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.message || 'Errore nell\'analisi');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Errore</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

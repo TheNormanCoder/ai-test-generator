@@ -1,0 +1,9 @@
+@echo off
+echo Starting AI Test Generator MCP Server...
+cd mcp-server
+if not exist node_modules (
+    echo Installing MCP dependencies...
+    npm install
+)
+echo MCP Server starting...
+npm start
