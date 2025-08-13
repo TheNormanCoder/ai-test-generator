@@ -13,11 +13,36 @@ AI-powered tool for automatically generating JUnit tests from existing Java code
 
 ## Prerequisites
 
+### For Docker (Recommended)
+- Docker & Docker Compose
+- OpenAI API Key
+
+### For Manual Setup
 - Java 21+
 - Maven 3.8+
+- Node.js 18+
 - OpenAI API Key
 
 ## Setup
+
+### 🐳 Docker Setup (Recommended)
+
+1. Clone the repository
+2. Configure your OpenAI API key:
+   ```bash
+   # Windows
+   set OPENAI_API_KEY=your-api-key-here
+   start-docker.bat
+   
+   # Linux/Mac
+   export OPENAI_API_KEY=your-api-key-here
+   chmod +x start-docker.sh
+   ./start-docker.sh
+   ```
+
+3. Access the application at `http://localhost:8080`
+
+### 📦 Manual Setup
 
 1. Clone the repository
 2. Configure your OpenAI API key:
@@ -26,7 +51,17 @@ AI-powered tool for automatically generating JUnit tests from existing Java code
    ```
    Or modify `src/main/resources/application.properties`
 
-3. Compile and run:
+3. Install MCP server dependencies:
+   ```bash
+   cd mcp-server && npm install
+   ```
+
+4. Start MCP server:
+   ```bash
+   cd mcp-server && npm start
+   ```
+
+5. Start Spring Boot (in another terminal):
    ```bash
    mvn spring-boot:run
    ```
@@ -139,3 +174,24 @@ mvn test
 - JUnit 5
 - Mockito
 - AssertJ
+- Docker & Docker Compose
+- Node.js MCP Server
+
+## Docker Commands
+
+```bash
+# Start services
+docker-compose up --build
+
+# Start in background
+docker-compose up -d --build
+
+# Stop services
+docker-compose down
+
+# View logs
+docker-compose logs -f
+
+# Rebuild and restart
+docker-compose up --build --force-recreate
+```

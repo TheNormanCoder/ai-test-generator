@@ -1,0 +1,74 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+MCP-INTEGRATION.md
+*.md
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Build artifacts
+target/
+build/
+*.class
+*.jar
+*.war
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# Gradle
+.gradle/
+gradle/
+
+# Logs
+*.log
+logs/
+
+# Node.js (will be handled by mcp-server)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+temp_*
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Environment files
+.env*
+!.env.example
+
+# Test outputs
+test-results/
+coverage/
+surefire-reports/
+
+# Spring Boot
+HELP.md
+.spring-boot-devtools.properties
+
+# Application logs
+application.log*
+spring.log*
+error.log*
