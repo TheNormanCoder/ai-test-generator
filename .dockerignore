@@ -22,9 +22,9 @@ build/
 *.jar
 *.war
 
-# Maven
-.mvn/wrapper/maven-wrapper.jar
-!.mvn/wrapper/maven-wrapper.properties
+# Maven (allow wrapper for Docker build)
+# .mvn/wrapper/maven-wrapper.jar
+# !.mvn/wrapper/maven-wrapper.properties
 
 # Gradle
 .gradle/

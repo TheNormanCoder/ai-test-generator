@@ -17,7 +17,7 @@ RUN ./mvnw dependency:go-offline -B
 # Copy source code
 COPY src ./src
 
-# Build the application
+# Build the application  
 RUN ./mvnw clean package -DskipTests
 
 # Runtime stage
@@ -29,8 +29,8 @@ RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 # Set working directory
 WORKDIR /app
 
-# Copy the built jar from builder stage
-COPY --from=builder /app/target/*.jar app.jar
+# Copy the built jar from builder stage  
+COPY --from=builder /app/target/ai-test-generator-*.jar app.jar
 
 # Change ownership to app user
 RUN chown -R appuser:appgroup /app
@@ -43,5 +43,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:8080/api/v1/test-generator/health || exit 1
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application with Spring Boot launcher
+ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
